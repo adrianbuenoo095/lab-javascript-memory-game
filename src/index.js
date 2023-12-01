@@ -34,18 +34,70 @@ window.addEventListener('load', (event) => {
       <div class="card" data-card-name="${pic.name}">
         <div class="back" name="${pic.img}"></div>
         <div class="front" style="background: url(img/${pic.img}) no-repeat"></div>
-      </div>
-    `;
+        </div>
+        `;
   });
 
   // Add all the divs to the HTML
   document.querySelector('#memory-board').innerHTML = html;
 
+  function toggle(element, classes) {
+    classes.forEach(className => element.classList.toggle(className));
+  }
+
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach((card) => {
     card.addEventListener('click', () => {
       // TODO: write some code here
-      console.log(`Card clicked: ${card}`);
+      const pairsClicked = document.getElementById("pairs-clicked");
+      const pairsGuessed = document.getElementById("pairs-guessed");
+
+      console.log("Card clicked: ", card);
+      toggle(card.children[0], ["back", "front"]);
+      toggle(card.children[1], ["back", "front"]);
+
+      memoryGame.pickedCards.push(card);
+
+      // console.log(pickedCardsLength.length)
+      let pickedCardsLength = memoryGame.pickedCards.length;
+
+      // console.log(card.classList.add("turned"))
+
+      if (pickedCardsLength === 2) {
+        let firstPair = memoryGame.pickedCards[0];
+        let secondPair = memoryGame.pickedCards[1];
+
+        let cardOne = firstPair.getAttribute("data-card-name");
+        let cardTwo = secondPair.getAttribute("data-card-name");
+        let isAMatch = memoryGame.checkIfPair(cardOne, cardTwo);
+        let isItFinished = memoryGame.checkIfFinished();
+
+
+        if (isAMatch) {
+          firstPair.children[1].classList.add("blocked");
+          secondPair.children[1].classList.add("blocked");
+          memoryGame.pickedCards = [];
+        }
+
+        if (isItFinished) {
+          document.querySelector("#memory-board").innerHTML = "";
+          let h1 = document.createElement("h1");
+          h1.style.color = "pink";
+          h1.innerHTML = "YOU WON!!!";
+          document.querySelector("#memory-board").appendChild(h1);
+        }
+      } else {
+        setTimeout(() => {
+          toggle(firstPair.children[0], ["back", "front"]);
+          toggle(firstPair.children[1], ["back", "front"]);
+          toggle(secondPair.children[0], ["back", "front"]);
+          toggle(secondPair.children[1], ["back", "front"]);
+        }, 1000);
+        memoryGame.pickedCards = [];
+      }
+      pairsClicked.innerHTML = memoryGame.pairsClicked;
+      pairsGuessed.innerHTML = memoryGame.pairsGuessed;
+
     });
   });
 });
