@@ -51,22 +51,23 @@ window.addEventListener('load', (event) => {
       // TODO: write some code here
       const pairsClicked = document.getElementById("pairs-clicked");
       const pairsGuessed = document.getElementById("pairs-guessed");
-
+      let firstPair, secondPair;
       console.log("Card clicked: ", card);
       toggle(card.children[0], ["back", "front"]);
       toggle(card.children[1], ["back", "front"]);
-
+      console.log(card)
       memoryGame.pickedCards.push(card);
 
       // console.log(pickedCardsLength.length)
       let pickedCardsLength = memoryGame.pickedCards.length;
-
+      console.log(memoryGame.pickedCards)
       // console.log(card.classList.add("turned"))
 
       if (pickedCardsLength === 2) {
-        let firstPair = memoryGame.pickedCards[0];
-        let secondPair = memoryGame.pickedCards[1];
+        firstPair = memoryGame.pickedCards[0];
+        secondPair = memoryGame.pickedCards[1];
 
+        console.log(`the final result is: ${firstPair.children[0]}`);
         let cardOne = firstPair.getAttribute("data-card-name");
         let cardTwo = secondPair.getAttribute("data-card-name");
         let isAMatch = memoryGame.checkIfPair(cardOne, cardTwo);
@@ -77,27 +78,27 @@ window.addEventListener('load', (event) => {
           firstPair.children[1].classList.add("blocked");
           secondPair.children[1].classList.add("blocked");
           memoryGame.pickedCards = [];
+
+          if (isItFinished) {
+            document.querySelector("#memory-board").innerHTML = "";
+            let h1 = document.createElement("h1");
+            h1.style.color = "pink";
+            h1.innerHTML = "YOU WON!!!";
+            document.querySelector("#memory-board").appendChild(h1);
+          }
+        } else {
+          setTimeout(() => {
+            toggle(firstPair.children[0], ["back", "front"]);
+            toggle(firstPair.children[1], ["back", "front"]);
+            toggle(secondPair.children[0], ["back", "front"]);
+            toggle(secondPair.children[1], ["back", "front"]);
+          }, 1000);
+          memoryGame.pickedCards = [];
         }
 
-        if (isItFinished) {
-          document.querySelector("#memory-board").innerHTML = "";
-          let h1 = document.createElement("h1");
-          h1.style.color = "pink";
-          h1.innerHTML = "YOU WON!!!";
-          document.querySelector("#memory-board").appendChild(h1);
-        }
-      } else {
-        setTimeout(() => {
-          toggle(firstPair.children[0], ["back", "front"]);
-          toggle(firstPair.children[1], ["back", "front"]);
-          toggle(secondPair.children[0], ["back", "front"]);
-          toggle(secondPair.children[1], ["back", "front"]);
-        }, 1000);
-        memoryGame.pickedCards = [];
+        pairsClicked.innerHTML = memoryGame.pairsClicked;
+        pairsGuessed.innerHTML = memoryGame.pairsGuessed;
       }
-      pairsClicked.innerHTML = memoryGame.pairsClicked;
-      pairsGuessed.innerHTML = memoryGame.pairsGuessed;
-
     });
   });
 });
