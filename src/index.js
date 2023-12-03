@@ -51,23 +51,19 @@ window.addEventListener('load', (event) => {
       // TODO: write some code here
       const pairsClicked = document.getElementById("pairs-clicked");
       const pairsGuessed = document.getElementById("pairs-guessed");
-      let firstPair, secondPair;
+
       console.log("Card clicked: ", card);
       toggle(card.children[0], ["back", "front"]);
       toggle(card.children[1], ["back", "front"]);
-      console.log(card)
+
       memoryGame.pickedCards.push(card);
 
-      // console.log(pickedCardsLength.length)
       let pickedCardsLength = memoryGame.pickedCards.length;
-      console.log(memoryGame.pickedCards)
-      // console.log(card.classList.add("turned"))
 
       if (pickedCardsLength === 2) {
-        firstPair = memoryGame.pickedCards[0];
-        secondPair = memoryGame.pickedCards[1];
+        let firstPair = memoryGame.pickedCards[0];
+        let secondPair = memoryGame.pickedCards[1];
 
-        console.log(`the final result is: ${firstPair.children[0]}`);
         let cardOne = firstPair.getAttribute("data-card-name");
         let cardTwo = secondPair.getAttribute("data-card-name");
         let isAMatch = memoryGame.checkIfPair(cardOne, cardTwo);
